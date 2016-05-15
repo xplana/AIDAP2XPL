@@ -18,18 +18,23 @@ public final class NavaidFile {
 
     ArrayList<Navaid> meinListe;
 
+    // Read a config file where the path to X-planes Navaid File is stored
+    // Check if the Navaid File exists
+    // read Navaid File (this normally takes X-planes original Navaids File) into
+    // an array
     public NavaidFile() {
+
         this.meinListe = new ArrayList<>();
         dateiEinlesen("/Users/wdr/Desktop/Navaids.txt");
     }
-
+    
     public void dateiEinlesen(String file) {
 
-        System.out.println("...\r\nProcessing Navaid import from: " + file);
-        FileReader myFile = null;
-        BufferedReader buff = null;
-
         final ArrayList<String[]> lines = new ArrayList<>();
+        FileReader myFile;
+        BufferedReader buff;
+
+        System.out.println("...\r\nProcessing Navaid import from: " + file);
 
         try {
 
@@ -51,7 +56,6 @@ public final class NavaidFile {
                 ndc.setVorSettingThree(array[5]);
                 ndc.setVorLat(array[6]);
                 ndc.setVorLon(array[7]);
-                
 
                 this.meinListe.add(ndc);
 
@@ -62,12 +66,11 @@ public final class NavaidFile {
         }
 
     }
-    
-    public void identifyNavaids()
-    {
+
+    public void identifyNavaids() {
         System.out.println("Trying to identify possible Navaid matches in NOTAMS");
     }
-    
+
     public boolean navaidExists(String vorId) {
 
         for (Navaid ndcTemp : meinListe) {

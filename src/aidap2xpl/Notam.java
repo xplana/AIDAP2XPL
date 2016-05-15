@@ -32,7 +32,15 @@ public class Notam {
 //<notam_nrc>NOTAMR</notam_nrc>
 //<notam_qcode>QFW
     
-    private String notam_id, cns_location_id, icao_name, notam_effective_dtg, notam_lastmod_dtg, notam_text, notam_qcode ;
+    private String 
+            notam_id, 
+            cns_location_id, 
+            icao_id,
+            icao_name, 
+            notam_effective_dtg, 
+            notam_lastmod_dtg, 
+            notam_text, 
+            notam_qcode ;
     
     
     
@@ -133,6 +141,20 @@ public class Notam {
      */
     public void setNotam_qcode(String notam_qcode) {
         this.notam_qcode = notam_qcode;
+    }
+
+    /**
+     * @return the icao_id
+     */
+    public String getIcao_id() {
+        return icao_id;
+    }
+
+    /**
+     * @param icao_id the icao_id to set
+     */
+    public void setIcao_id(String icao_id) {
+        this.icao_id = icao_id;
     }
     
     

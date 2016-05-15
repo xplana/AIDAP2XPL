@@ -24,16 +24,16 @@ import org.xml.sax.SAXException;
 public class NotamsFile {
 
     ArrayList<Notam> NotamsListe;
-    ArrayList<Notam> NotamsMatchings;
-    
-//Lets see what´ up here sd
 
+//Lets see what´ up here sd
     File fXmlFile = new File("/Users/wdr/Desktop/notam_I.xml");
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder;
     Document doc;
 
     public NotamsFile() throws IOException, SAXException, ParserConfigurationException {
+
+        NotamsListe = new ArrayList<>();
 
         // Preparing XML Inport
         this.dBuilder = dbFactory.newDocumentBuilder();
@@ -47,35 +47,63 @@ public class NotamsFile {
 
         // Create navaid objects
         for (int temp = 0; temp < nList.getLength(); temp++) {
+
             Notam notam = new Notam();
 
             Node nNode = nList.item(temp);
             Element eElement = (Element) nNode;
 
-            //Einlesen der einzelnen Elemente des NOTAMS
+            // Import NOTAM ID
             notam.setNotam_id(eElement.getElementsByTagName("notam_id").item(0).getTextContent());
+
+            // Import Location_ID from notam, normally this is the Airport ICAO Code 
             notam.setCns_location_id(eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
-            //notam.setNotam_effective_dtg(eElement.getElementsByTagName("notam_effective_dtg").item(0).getTextContent());
-            //notam.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
+
+            // Import the ICAO ID effective
+            try {
+                notam.setIcao_id(eElement.getElementsByTagName("icao_id").item(0).getTextContent());
+            } catch (Exception e) {
+                System.out.println(temp + "Missing Notams effective " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+            }
+            
+            // Import the NOTAMS effective
+            try {
+                notam.setNotam_effective_dtg(eElement.getElementsByTagName("notam_effective_dtg").item(0).getTextContent());
+            } catch (Exception e) {
+                System.out.println(temp + "Missing Notams effective " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+            }
+
+            // Import ICAO Name from Notam
+            try {
+                notam.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
+            } catch (Exception e) {
+                System.out.println(temp + "Missing ICAO name for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+            }
+
+            // Import the NOTAM Text
             notam.setNotam_text(eElement.getElementsByTagName("notam_text").item(0).getTextContent());
 
-            //System.out.println (temp + ".............................................................");
-            //System.out.println("Notam Numer: " + notam.getNotam_id() + " CNS Location: (" + notam.getCns_location_id() + ")\r\n" + notam.getNotam_text());
-        }
+            // Put all the shid into the Container
+            this.NotamsListe.add(notam);
 
-    }
-    
-    public Notam identifyPossibleNavaids(String QCode) {
-     
-        System.out.println("...\r\nLooking for NOTAMSs containing the QCode: " + QCode);
-        Notam newNotam = new Notam();
-        for(Notam newNotam2:NotamsMatchings) {
-//            if (newNotam2.getNotam_text().contains(QCode)) {
-//            
-//        }
         }
-       
-        return newNotam;
+        System.out.println("Size to parse: " + NotamsListe.size());
     }
- 
+
+    public Notam identifyPossibleNavaids(String QCode) {
+        System.out.println("...\r\nTrying to find NOTAMS that contain Q-Code: " + QCode);
+        Notam processingNotam = new Notam();
+
+        System.out.println("Size to parse: " + NotamsListe.size());
+
+        for (Notam nt2 : NotamsListe) {
+
+            if (nt2.getNotam_text().contains("/" + QCode)) {
+                System.out.println("Matching: " + nt2.getCns_location_id() + " " + nt2.getIcao_name());
+            }
+
+        }
+        return processingNotam;
+    }
+
 }

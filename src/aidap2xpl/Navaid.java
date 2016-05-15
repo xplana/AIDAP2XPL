@@ -23,6 +23,7 @@ public class Navaid {
     private String VorCountryCode;
     private String VorSettingFour;
 
+
     /**
      * @return the VorId
      */

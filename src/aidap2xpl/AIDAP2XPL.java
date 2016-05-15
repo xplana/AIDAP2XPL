@@ -22,6 +22,7 @@ public class AIDAP2XPL {
      * @throws javax.xml.parsers.ParserConfigurationException
      */
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
+        
         // Import Navaids from X-Plane Navaids.txt file
         NavaidFile navaidContainer = new NavaidFile();
 
