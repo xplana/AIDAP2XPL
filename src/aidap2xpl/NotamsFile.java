@@ -8,6 +8,8 @@ package aidap2xpl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,6 +26,7 @@ import org.xml.sax.SAXException;
 public class NotamsFile {
 
     ArrayList<Notam> NotamsListe;
+    ArrayList<ActionItem> ActionListe;
 
     File fXmlFile = new File(System.getProperty("user.home") + "/Desktop/notam_I.xml");
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -104,30 +107,90 @@ public class NotamsFile {
         System.out.println("Size to parse: " + NotamsListe.size());
     }
 
-    
-    
-    
     //Identify possible matchings
     public Notam identifyPossibleNavaids(String QCode) {
-      
-        System.out.println("...\r\nTrying to find NOTAMS that contain Q-Code: " + QCode);
-        
         Notam processingNotam = new Notam();
+        ActionItem output = new ActionItem();
+
+        System.out.println("...\r\nTrying to find NOTAMS that contain Q-Code: " + QCode);
         System.out.println("Size to parse: " + NotamsListe.size());
-        
-        // Get all matchings based on the QCode
+
         for (Notam nt2 : NotamsListe) {
 
+            // Get all matchings based on the QCode
             if (nt2.getNotam_text().contains("/" + QCode)) {
-                //System.out.println("Matching: " + nt2.getNotam_id()+ " " + nt2.getNotam_report());
-                
-                 // remove all "'" 
-                 if( nt2.getNotam_text().contains("'")) {
+
+                // Check if line E) is availabile in NOTAM TEXT
+                if (nt2.getNotam_text().contains("E) ")) {
+                    //System.out.println("Line E waas found");
+
+                    // Remove unwanted artifacts and expressions
+                    String cleanLineE = nt2.
+                            getNotam_text().replaceAll("'", "")
+                            .replaceAll("POSSIBLE FALSE INDICATIONS", "")
+                            .replaceAll("DO NOT USE", "")
+                            .replaceAll("DUE TO MAINTENANCE", "")
+                            .replaceAll("POSSIBLE FALSE INDICATION", "")
+                            .replaceAll("OUT OF SERVICE", "")
+                            .replaceAll("U/S", "")
+                            .replaceAll("/", "")
+                            .replaceAll("VOR", "")
+                            .replaceAll("DME", "");
+
+                    //output.setItemMessage(cleanLineE);
                      
-                     System.out.println("Founf a ': " + nt2.getNotam_id()+ " " + nt2.getNotam_report());
-                 }
+                    // trying to identify the frequency    
+                  
+                    Pattern p = Pattern.compile("[1-9]{1}[0-9]{2}[.]{1}\\d{0,3}|\\d{3}[,]{1}\\d{0,3}");
+                    Matcher m = p.matcher(cleanLineE.substring(cleanLineE.lastIndexOf("E) ")));
+                    while (m.find()) {
+                        if (m.group().isEmpty()){
+                            output.setItemFreq("none found");
+                        }else {
+                             //System.out.println("Navaid Frequency identified >> " + m.group() + " " + m.start() + " " + m.end());
+                             output.setItemFreq(m.group());
+                        }
+                            
+                       
+                        
+                    }
+                    
+                         
+
+                   
+
+                }
+
+                // write all possible results into the actionList 
+                try {
+                    output.setItemId(nt2.getCns_location_id());
+                    output.setItemType("not defined yet");
+                    output.setItemLat("not defined yet");
+                    output.setItemLon("not defined yet");
+                    output.setItemFrom("not defined yet");
+                    output.setItemUntil("not defined yet");
+
+                    System.out.println("...\r\n" + output.getItemId() + " " + output.getItemFreq()+ " "+ output.getItemType() + " " + output.getItemLat() + " " + output.getItemFrom() + " " + output.getItemUntil() + " " + output.getItemMessage());
+//                    
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+
+                // remove all "'" 
+//               if (nt2.getNotam_text().contains("'")) {
+//
+//                    System.out.println("Founf a ': " + nt2.getNotam_id() + " " + nt2.getNotam_report());
+//                } else if (nt2.getNotam_text().contains("''")) {
+//                    System.out.println("Founf two ': " + nt2.getNotam_id() + " " + nt2.getNotam_report());
+//                } //System.out.println("Matching: " + nt2.getNotam_id()+ " " + nt2.getNotam_report());
             }
+
+            //Output all entries that might be of interest 
         }
+
+        //System.out.println("Total entries in actionList" + ActionListe.size());
+        System.out.println("End of processing" + output.getItemId());
+
         return processingNotam;
     }
 

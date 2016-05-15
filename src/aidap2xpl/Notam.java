@@ -10,7 +10,7 @@ package aidap2xpl;
  * @author wdr
  */
 public class Notam {
-    
+
 //    <notam-rec>
 //<source_id>I</source_id>
 //<account_id>AGGHYNYX</account_id>
@@ -31,21 +31,19 @@ public class Notam {
 //<notam_report>RWY 24 WDI OBST LGT U/S. 05 APR 01:00 2016 UNTIL 31 MAY 01:00 2016 ESTIMATED. CREATED: 14 APR 03:56 2016</notam_report>
 //<notam_nrc>NOTAMR</notam_nrc>
 //<notam_qcode>QFW
-    
-    private String 
-            notam_id, 
-            cns_location_id, 
+    private String notam_id,
+            cns_location_id,
             icao_id,
-            icao_name, 
-            notam_effective_dtg, 
-            notam_lastmod_dtg, 
+            icao_name,
+            notam_effective_dtg,
+            notam_lastmod_dtg,
             notam_text,
+            notam_lat,
+            notam_long,
+            notam_from,
+            notam_until,
+            notam_item_type,
             notam_report;
-            
-         
-    
-    
-    
 
     /**
      * @return the notam_id
@@ -131,8 +129,6 @@ public class Notam {
         this.notam_text = notam_text;
     }
 
-    
-
     /**
      * @return the icao_id
      */
@@ -160,8 +156,75 @@ public class Notam {
     public void setNotam_report(String notam_report) {
         this.notam_report = notam_report;
     }
-    
-    
-    
-    
+
+    /**
+     * @return the notam_lat
+     */
+    public String getNotam_lat() {
+        return notam_lat;
+    }
+
+    /**
+     * @param notam_lat the notam_lat to set
+     */
+    public void setNotam_lat(String notam_lat) {
+        this.notam_lat = notam_lat;
+    }
+
+    /**
+     * @return the notam_long
+     */
+    public String getNotam_long() {
+        return notam_long;
+    }
+
+    /**
+     * @param notam_long the notam_long to set
+     */
+    public void setNotam_long(String notam_long) {
+        this.notam_long = notam_long;
+    }
+
+    /**
+     * @return the notam_from
+     */
+    public String getNotam_from() {
+        return notam_from;
+    }
+
+    /**
+     * @param notam_from the notam_from to set
+     */
+    public void setNotam_from(String notam_from) {
+        this.notam_from = notam_from;
+    }
+
+    /**
+     * @return the notam_until
+     */
+    public String getNotam_until() {
+        return notam_until;
+    }
+
+    /**
+     * @param notam_until the notam_until to set
+     */
+    public void setNotam_until(String notam_until) {
+        this.notam_until = notam_until;
+    }
+
+    /**
+     * @return the notam_item_type
+     */
+    public String getNotam_item_type() {
+        return notam_item_type;
+    }
+
+    /**
+     * @param notam_item_type the notam_item_type to set
+     */
+    public void setNotam_item_type(String notam_item_type) {
+        this.notam_item_type = notam_item_type;
+    }
+
 }

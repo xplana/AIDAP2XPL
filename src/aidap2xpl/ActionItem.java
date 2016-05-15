@@ -17,6 +17,7 @@ public class ActionItem {
             ItemLat,
             ItemLon,
             ItemFrom,
+            ItemFreq,
             ItemUntil,
             ItemMessage;    // RAW NOTAM message 
 
@@ -116,6 +117,20 @@ public class ActionItem {
      */
     public void setItemMessage(String ItemMessage) {
         this.ItemMessage = ItemMessage;
+    }
+
+    /**
+     * @return the ItemFreq
+     */
+    public String getItemFreq() {
+        return ItemFreq;
+    }
+
+    /**
+     * @param ItemFreq the ItemFreq to set
+     */
+    public void setItemFreq(String ItemFreq) {
+        this.ItemFreq = ItemFreq;
     }
     
     
