@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 public class NotamsFile {
 
     ArrayList<Notam> NotamsListe;
-    ArrayList<Notam> meinListe;
+    ArrayList<Notam> NotamsMatchings;
     
 //Lets see what´ up here sd
 
@@ -69,7 +69,7 @@ public class NotamsFile {
      
         System.out.println("...\r\nLooking for NOTAMSs containing the QCode: " + QCode);
         Notam newNotam = new Notam();
-        for(Notam newNotam2:meinListe) {
+        for(Notam newNotam2:NotamsMatchings) {
 //            if (newNotam2.getNotam_text().contains(QCode)) {
 //            
 //        }
