@@ -39,8 +39,8 @@ public class Notam {
             icao_name, 
             notam_effective_dtg, 
             notam_lastmod_dtg, 
-            notam_text, 
-            notam_qcode ;
+            notam_text;
+         
     
     
     
@@ -129,19 +129,7 @@ public class Notam {
         this.notam_text = notam_text;
     }
 
-    /**
-     * @return the notam_qcode
-     */
-    public String getNotam_qcode() {
-        return notam_qcode;
-    }
-
-    /**
-     * @param notam_qcode the notam_qcode to set
-     */
-    public void setNotam_qcode(String notam_qcode) {
-        this.notam_qcode = notam_qcode;
-    }
+    
 
     /**
      * @return the icao_id

@@ -53,33 +53,49 @@ public class NotamsFile {
             Node nNode = nList.item(temp);
             Element eElement = (Element) nNode;
 
+            
             // Import NOTAM ID
-            notam.setNotam_id(eElement.getElementsByTagName("notam_id").item(0).getTextContent());
+            try {
+                notam.setNotam_id(eElement.getElementsByTagName("notam_id").item(0).getTextContent());
+            } catch (Exception e) {
+                System.out.println(temp + " Missing notam_id for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+            }
 
+            
             // Import Location_ID from notam, normally this is the Airport ICAO Code 
             notam.setCns_location_id(eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
 
-            // Import the ICAO ID effective
+            
+            // Import the ICAO ID, normally this is tha airports name
             try {
                 notam.setIcao_id(eElement.getElementsByTagName("icao_id").item(0).getTextContent());
             } catch (Exception e) {
-                System.out.println(temp + "Missing Notams effective " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+                System.out.println(temp + " Missing ICAO Name " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
+                
+            
+            // Import ICAO Name from Notam
+            try {
+                notam.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
+            } catch (Exception e) {
+                System.out.println(temp + " Missing ICAO name for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+            }
+            
             
             // Import the NOTAMS effective
             try {
                 notam.setNotam_effective_dtg(eElement.getElementsByTagName("notam_effective_dtg").item(0).getTextContent());
             } catch (Exception e) {
-                System.out.println(temp + "Missing Notams effective " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+                System.out.println(temp + " Missing Notams effective date " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
 
-            // Import ICAO Name from Notam
+            // Import the NOTAMS last mod
             try {
-                notam.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
+                notam.setNotam_lastmod_dtg(eElement.getElementsByTagName("notam_lastmod_dtg").item(0).getTextContent());
             } catch (Exception e) {
-                System.out.println(temp + "Missing ICAO name for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+                System.out.println(temp + " Missing Notams Ladtmod " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
-
+            
             // Import the NOTAM Text
             notam.setNotam_text(eElement.getElementsByTagName("notam_text").item(0).getTextContent());
 
