@@ -25,12 +25,12 @@ public class NotamsFile {
 
     ArrayList<Notam> NotamsListe;
 
-//Lets see what´ up here sd
-    File fXmlFile = new File("/Users/wdr/Desktop/notam_I.xml");
+    File fXmlFile = new File(System.getProperty("user.home") + "/Desktop/notam_I.xml");
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder;
     Document doc;
 
+    //Import the NOTAMS file
     public NotamsFile() throws IOException, SAXException, ParserConfigurationException {
 
         NotamsListe = new ArrayList<>();
@@ -53,7 +53,6 @@ public class NotamsFile {
             Node nNode = nList.item(temp);
             Element eElement = (Element) nNode;
 
-            
             // Import NOTAM ID
             try {
                 notam.setNotam_id(eElement.getElementsByTagName("notam_id").item(0).getTextContent());
@@ -61,27 +60,23 @@ public class NotamsFile {
                 System.out.println(temp + " Missing notam_id for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
 
-            
             // Import Location_ID from notam, normally this is the Airport ICAO Code 
             notam.setCns_location_id(eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
 
-            
             // Import the ICAO ID, normally this is tha airports name
             try {
                 notam.setIcao_id(eElement.getElementsByTagName("icao_id").item(0).getTextContent());
             } catch (Exception e) {
                 System.out.println(temp + " Missing ICAO Name " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
-                
-            
+
             // Import ICAO Name from Notam
             try {
                 notam.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
             } catch (Exception e) {
                 System.out.println(temp + " Missing ICAO name for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
-            
-            
+
             // Import the NOTAMS effective
             try {
                 notam.setNotam_effective_dtg(eElement.getElementsByTagName("notam_effective_dtg").item(0).getTextContent());
@@ -95,9 +90,12 @@ public class NotamsFile {
             } catch (Exception e) {
                 System.out.println(temp + " Missing Notams Ladtmod " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
             }
-            
+
             // Import the NOTAM Text
             notam.setNotam_text(eElement.getElementsByTagName("notam_text").item(0).getTextContent());
+
+            //import the NOTAM Message
+            notam.setNotam_report(eElement.getElementsByTagName("notam_report").item(0).getTextContent());
 
             // Put all the shid into the Container
             this.NotamsListe.add(notam);
@@ -106,18 +104,29 @@ public class NotamsFile {
         System.out.println("Size to parse: " + NotamsListe.size());
     }
 
+    
+    
+    
+    //Identify possible matchings
     public Notam identifyPossibleNavaids(String QCode) {
+      
         System.out.println("...\r\nTrying to find NOTAMS that contain Q-Code: " + QCode);
+        
         Notam processingNotam = new Notam();
-
         System.out.println("Size to parse: " + NotamsListe.size());
-
+        
+        // Get all matchings based on the QCode
         for (Notam nt2 : NotamsListe) {
 
             if (nt2.getNotam_text().contains("/" + QCode)) {
-                System.out.println("Matching: " + nt2.getCns_location_id() + " " + nt2.getIcao_name());
+                //System.out.println("Matching: " + nt2.getNotam_id()+ " " + nt2.getNotam_report());
+                
+                 // remove all "'" 
+                 if( nt2.getNotam_text().contains("'")) {
+                     
+                     System.out.println("Founf a ': " + nt2.getNotam_id()+ " " + nt2.getNotam_report());
+                 }
             }
-
         }
         return processingNotam;
     }

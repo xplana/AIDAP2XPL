@@ -39,7 +39,9 @@ public class Notam {
             icao_name, 
             notam_effective_dtg, 
             notam_lastmod_dtg, 
-            notam_text;
+            notam_text,
+            notam_report;
+            
          
     
     
@@ -143,6 +145,20 @@ public class Notam {
      */
     public void setIcao_id(String icao_id) {
         this.icao_id = icao_id;
+    }
+
+    /**
+     * @return the notam_report
+     */
+    public String getNotam_report() {
+        return notam_report;
+    }
+
+    /**
+     * @param notam_report the notam_report to set
+     */
+    public void setNotam_report(String notam_report) {
+        this.notam_report = notam_report;
     }
     
     

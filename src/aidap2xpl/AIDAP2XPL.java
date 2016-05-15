@@ -28,7 +28,7 @@ public class AIDAP2XPL {
 
         // Einlesen der Notmas-File    
         NotamsFile notams = new NotamsFile();
-        notams.identifyPossibleNavaids("QLCAS");
+        notams.identifyPossibleNavaids("QNM");
 
         //Parse Notams-File
     
