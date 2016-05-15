@@ -26,7 +26,7 @@ public class NotamsFile {
     ArrayList<Notam> NotamsListe;
     ArrayList<Notam> meinListe;
     
-//Lets see what´ up here
+//Lets see what´ up here sd
 
     File fXmlFile = new File("/Users/wdr/Desktop/notam_I.xml");
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
