@@ -12,7 +12,9 @@ package aidap2xpl;
 public class Settings {
     private String XPL_Path = "/Applications/X-Plane 10/Custom Data/GNS430/navdata/Navaids.TXT";
     private String NotamsXMLFile = "/Users/wdr/Desktop/notam_I.XML";
-    private Boolean debugOn = true;
+    private String ActionFileXPlane = "/Users/wdr/Desktop/output.TXT";
+    private Boolean debugOn = false;
+    private Integer debugLevel = 1;         //1=only important notes, 0=all
 
     /**
      * @return the XPL_Path
@@ -54,6 +56,34 @@ public class Settings {
      */
     public void setDebugOn(Boolean debugOn) {
         this.debugOn = debugOn;
+    }
+
+    /**
+     * @return the ActionFileXPlane
+     */
+    public String getActionFileXPlane() {
+        return ActionFileXPlane;
+    }
+
+    /**
+     * @param ActionFileXPlane the ActionFileXPlane to set
+     */
+    public void setActionFileXPlane(String ActionFileXPlane) {
+        this.ActionFileXPlane = ActionFileXPlane;
+    }
+
+    /**
+     * @return the debugLevel
+     */
+    public Integer getDebugLevel() {
+        return debugLevel;
+    }
+
+    /**
+     * @param debugLevel the debugLevel to set
+     */
+    public void setDebugLevel(Integer debugLevel) {
+        this.debugLevel = debugLevel;
     }
     
 }

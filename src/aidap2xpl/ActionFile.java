@@ -16,15 +16,18 @@ import java.util.ArrayList;
  */
 public class ActionFile {
 
+    Settings set = new Settings();
+    debug out = new debug();
+    
     ArrayList<ActionItem> ActionItemsList;
 
     private FileWriter writer;
-    File f = new File("/Users/wdr/Desktop/output.txt");
+   File f = new File(set.getActionFileXPlane());
 
     // Initialize OutputFile, make sure to delete this on every startup
     public void initializeActionFile() throws IOException {
 
-        System.out.println("Initializing ActionFile");
+        System.out.println("Preparing outputfile for X-Plane: " + f.toString());
         writer = new FileWriter(f);
         if (f.exists()) {
             System.out.println("ActionFile already exists: " + f.toString());

@@ -14,10 +14,14 @@ public class debug {
     Settings setting = new Settings();
     
     
-    public void printToScreen (String message) {
+    public void printToScreen (String message, int priority) {
         
-        if (setting.getDebugOn()==true) {
-            System.out.println("");
+        if (setting.getDebugOn()==true && priority == 1) {
+            System.out.println(message);
+        }
+        
+         if (setting.getDebugOn()==true && priority == 1) {
+            System.out.println(message);
         }
     }
     

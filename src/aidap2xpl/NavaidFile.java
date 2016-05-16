@@ -35,7 +35,7 @@ public final class NavaidFile {
         try {
              dateiEinlesen(setting.getXPL_Path());
         } catch(Exception e) {
-            out.printToScreen("Problem reading file " + setting.getXPL_Path());
+            out.printToScreen("Problem reading file " + setting.getXPL_Path(),1);
         }
        
     }
@@ -46,7 +46,7 @@ public final class NavaidFile {
         FileReader myFile;
         BufferedReader buff;
 
-//        System.out.println("...\r\nProcessing Navaid import from: " + file);
+        out.printToScreen("...\r\nProcessing Navaid import from: " + file,1);
 
         try {
 

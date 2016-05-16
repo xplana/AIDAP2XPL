@@ -26,15 +26,23 @@ public class AIDAP2XPL {
         // Import Navaids from X-Plane Navaids.txt file
         NavaidFile navaidContainer = new NavaidFile();
 
-        // Import the Q-Codes and UIR/FIRS
-        // <<<<<<todo>>>>>>>>>
+        // TODO Import the Q-Codes and UIR/FIRS
+        // 
         
         
         // Import Notams File    
         NotamsFile notams = new NotamsFile();
-        notams.identifyPossibleNavaids("QNMAS");
+        
+        
+        
+        //Initialize the File we want to write the actionItems for X-Plane in
+        ActionFile output = new ActionFile();
+        output.initializeActionFile();
+        
 
-        //Parse Notams-File
+        // Parse and write Notams-File for 
+        notams.identifyPossibleNavaids("QNMAS");
+        notams.identifyPossibleNavaids("QNMAW");
     
         //navaidContainer.navaidExists("LBU");
         //Navaid getExisting = navaidContainer.getExistingNavaid("TAU");
