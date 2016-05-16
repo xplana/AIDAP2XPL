@@ -13,6 +13,7 @@ public class Settings {
     private String XPL_Path = "/Applications/X-Plane 10/Custom Data/GNS430/navdata/Navaids.TXT";
     private String NotamsXMLFile = "/Users/wdr/Desktop/notam_I.XML";
     private Boolean debugOn = true;
+    // Lili was here!
 
     
     
