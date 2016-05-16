@@ -7,6 +7,7 @@ package aidap2xpl;
 
 import java.io.File;
 import java.io.IOException;
+import static java.sql.Types.NULL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,10 +25,10 @@ import org.xml.sax.SAXException;
  * @author wdr
  */
 public class NotamsFile {
-
+    
     ArrayList<Notam> NotamsListe;
     ArrayList<ActionItem> ActionListe;
-
+    
     File fXmlFile = new File(System.getProperty("user.home") + "/Desktop/notam_I.xml");
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder;
@@ -35,7 +36,7 @@ public class NotamsFile {
 
     //Import the NOTAMS file
     public NotamsFile() throws IOException, SAXException, ParserConfigurationException {
-
+        
         NotamsListe = new ArrayList<>();
 
         // Preparing XML Inport
@@ -50,9 +51,9 @@ public class NotamsFile {
 
         // Create navaid objects
         for (int temp = 0; temp < nList.getLength(); temp++) {
-
+            
             Notam notam = new Notam();
-
+            
             Node nNode = nList.item(temp);
             Element eElement = (Element) nNode;
 
@@ -102,7 +103,7 @@ public class NotamsFile {
 
             // Put all the shid into the Container
             this.NotamsListe.add(notam);
-
+            
         }
         System.out.println("Size to parse: " + NotamsListe.size());
     }
@@ -111,18 +112,19 @@ public class NotamsFile {
     public Notam identifyPossibleNavaids(String QCode) {
         Notam processingNotam = new Notam();
         ActionItem output = new ActionItem();
-
+        
         System.out.println("...\r\nTrying to find NOTAMS that contain Q-Code: " + QCode);
         System.out.println("Size to parse: " + NotamsListe.size());
-
+        
         for (Notam nt2 : NotamsListe) {
 
             // Get all matchings based on the QCode
             if (nt2.getNotam_text().contains("/" + QCode)) {
+                System.out.println("\r\nORIGINAL:...................");
+                System.out.println(nt2.getNotam_text());
 
                 // Check if line E) is availabile in NOTAM TEXT
                 if (nt2.getNotam_text().contains("E) ")) {
-                    //System.out.println("Line E waas found");
 
                     // Remove unwanted artifacts and expressions
                     String cleanLineE = nt2.
@@ -133,56 +135,124 @@ public class NotamsFile {
                             .replaceAll("POSSIBLE FALSE INDICATION", "")
                             .replaceAll("OUT OF SERVICE", "")
                             .replaceAll("U/S", "")
+                            .replaceAll("\\?", "")
                             .replaceAll("/", "")
                             .replaceAll("VOR", "")
-                            .replaceAll("DME", "");
+                            .replaceAll("DME", "")
+                            .replaceAll("CH1", "")
+                            .replaceAll("UNSERVICEABLE", "");
+                    
+                    output.setItemMessage(cleanLineE);
 
-                    //output.setItemMessage(cleanLineE);
-                     
-                    // trying to identify the frequency    
-                  
-                    Pattern p = Pattern.compile("[1-9]{1}[0-9]{2}[.]{1}\\d{0,3}|\\d{3}[,]{1}\\d{0,3}");
-                    Matcher m = p.matcher(cleanLineE.substring(cleanLineE.lastIndexOf("E) ")));
-                    while (m.find()) {
-                        if (m.group().isEmpty()){
-                            output.setItemFreq("none found");
-                        }else {
-                             //System.out.println("Navaid Frequency identified >> " + m.group() + " " + m.start() + " " + m.end());
-                             output.setItemFreq(m.group());
-                        }
-                            
-                       
+                    // trying to identify the Navaids name
+                    // Step1. load notam_report and do some cleaning
+                    String cleanReport = nt2.getNotam_report().
+                            replaceAll("'", "")
+                            .replaceAll("\\.", "")
+                            .replaceAll("\\?", "")
+                            .replaceAll("/", "")
+                            .replaceAll("\\(", "")
+                            .replaceAll("\\)", "")
+                            .replaceAll("VOR", "")
+                            .replaceAll("NDB", "")
+                            .replaceAll("DME", "")
+                            .replaceAll("VUB", "");
+
+                    // Step2. split the Report in single strings
+                    String[] cleanReportSplitted = cleanReport.split(" ");
+
+                    // trying to identify the navaids frequency    
+                    Pattern p = null;
+
+                    // VOR    
+                    if (QCode.startsWith("QNM")) {
+                        //determine type of Navaid
+                        output.setItemType("VOR/DME");
+
+                        //define regexpattern for this kind of navaid
+                        p = Pattern.compile(
+                                //definition VOR 108.00 - 117.95
+                                "[1]{1}[0-1]{1}[0-9]{1}[.]{1}\\d{0,2}|"
+                                + //definition VOR 108,00 - 117,95
+                                "[1]{1}[0-1]{1}[0-9]{1}[,]{1}\\d{0,2}");
+                        
+                    }
+                    // NDB  
+                    if (QCode.startsWith("QNB")) {
+                        //determine type of Navaid
+                        output.setItemType("NDB");
+
+                        //define regexpattern for this kind of navaid
+                        p = Pattern.compile(
+                                //definition NBD 300-3000
+                                "[0-3]{1}[0-9]{3}");
                         
                     }
                     
-                         
+                    Matcher m = p.matcher(cleanLineE.substring(cleanLineE.lastIndexOf("E) ")));
+                    
+                    while (m.equals(NULL)) {
+                        output.setItemFreq("-");
+                        // break;
+                    }
+                    
+                    while (m.find()) {
 
-                   
+                        //System.out.println("Navaid Frequency identified >> " + m.group() + " " + m.start() + " " + m.end());
+                        output.setItemFreq(m.group().replace(",", "."));
+                        break;
+                    }
 
+                    // Step3. Check if the parsed navaid exists in XPL navaid database
+                    NavaidFile neu = new NavaidFile();
+                    int i;
+                    for (i = 0; i < cleanReportSplitted.length; i++) {
+                        if (cleanReportSplitted[i].length() == 2 | cleanReportSplitted[i].length() == 3) //System.out.println("Now cheking, if this Navaid is in the Navaid Database: " +cleanReportSplitted[i]);
+                        {
+                            if (neu.navaidExists(cleanReportSplitted[i], output.getItemFreq())) {
+                                
+                                System.out.println(cleanReportSplitted[i] + " found in Database Navaids");
+                                //write the found and matching navaid to the output List
+                                output.setItemId(cleanReportSplitted[i]);
+
+                                //determine type of Navaid
+                                if (QCode.startsWith("QNM")) {
+                                    
+                                }
+                                
+                                break;
+                            } else {
+                                //System.out.println(cleanReportSplitted[i] + " not found in Database Navaids");
+                            }
+                        }
+                        
+                    }
+
+                    //System.out.println(cleanReport);
                 }
 
                 // write all possible results into the actionList 
                 try {
-                    output.setItemId(nt2.getCns_location_id());
-                    output.setItemType("not defined yet");
-                    output.setItemLat("not defined yet");
-                    output.setItemLon("not defined yet");
-                    output.setItemFrom("not defined yet");
-                    output.setItemUntil("not defined yet");
-
-                    System.out.println("...\r\n" + output.getItemId() + " " + output.getItemFreq()+ " "+ output.getItemType() + " " + output.getItemLat() + " " + output.getItemFrom() + " " + output.getItemUntil() + " " + output.getItemMessage());
+                    //output.setItemId(nt2.getCns_location_id()); this needs to be changed
+                    output.setItemRegion(nt2.getIcao_id());
+                    output.setItemLat("LAT");
+                    output.setItemLon("LON");
+                    output.setItemFrom("FROM");
+                    output.setItemUntil("UNTIL");
+                    
+                    System.out.println(output.getItemId() + " "
+                            + output.getItemRegion() + " "
+                            + output.getItemFreq() + " "
+                            + output.getItemType() + " "
+                            + output.getItemLat() + " "
+                            + output.getItemLon() + " "
+                            + output.getItemFrom() + " "
+                            + output.getItemUntil());
 //                    
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-
-                // remove all "'" 
-//               if (nt2.getNotam_text().contains("'")) {
-//
-//                    System.out.println("Founf a ': " + nt2.getNotam_id() + " " + nt2.getNotam_report());
-//                } else if (nt2.getNotam_text().contains("''")) {
-//                    System.out.println("Founf two ': " + nt2.getNotam_id() + " " + nt2.getNotam_report());
-//                } //System.out.println("Matching: " + nt2.getNotam_id()+ " " + nt2.getNotam_report());
+                
             }
 
             //Output all entries that might be of interest 
@@ -190,8 +260,13 @@ public class NotamsFile {
 
         //System.out.println("Total entries in actionList" + ActionListe.size());
         System.out.println("End of processing" + output.getItemId());
-
+        
         return processingNotam;
     }
 
+    //Write a file whith everything that XPL has to execute (one day)
+    public void createActionFile() {
+        
+    }
+    
 }

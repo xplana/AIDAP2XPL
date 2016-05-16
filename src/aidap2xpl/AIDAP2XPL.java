@@ -26,7 +26,11 @@ public class AIDAP2XPL {
         // Import Navaids from X-Plane Navaids.txt file
         NavaidFile navaidContainer = new NavaidFile();
 
-        // Einlesen der Notmas-File    
+        // Import the Q-Codes and UIR/FIRS
+        // <<<<<<todo>>>>>>>>>
+        
+        
+        // Import Notams File    
         NotamsFile notams = new NotamsFile();
         notams.identifyPossibleNavaids("QNMAS");
 

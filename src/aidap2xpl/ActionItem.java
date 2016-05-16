@@ -12,6 +12,7 @@ package aidap2xpl;
 public class ActionItem {
     
     private String 
+            ItemRegion,     // used for UIR/FIR
             ItemId,         //Navaid identifier.. 
             ItemType,       //VOR, ILS ...
             ItemLat,
@@ -131,6 +132,20 @@ public class ActionItem {
      */
     public void setItemFreq(String ItemFreq) {
         this.ItemFreq = ItemFreq;
+    }
+
+    /**
+     * @return the ItemRegion
+     */
+    public String getItemRegion() {
+        return ItemRegion;
+    }
+
+    /**
+     * @param ItemRegion the ItemRegion to set
+     */
+    public void setItemRegion(String ItemRegion) {
+        this.ItemRegion = ItemRegion;
     }
     
     

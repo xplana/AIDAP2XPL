@@ -34,7 +34,7 @@ public final class NavaidFile {
         FileReader myFile;
         BufferedReader buff;
 
-        System.out.println("...\r\nProcessing Navaid import from: " + file);
+//        System.out.println("...\r\nProcessing Navaid import from: " + file);
 
         try {
 
@@ -60,7 +60,7 @@ public final class NavaidFile {
                 this.meinListe.add(ndc);
 
             }
-            System.out.println("Total Navaids imported: " + this.meinListe.size());
+            //System.out.println("Total Navaids imported: " + this.meinListe.size());
 
         } catch (IOException e) {
         }
@@ -71,15 +71,19 @@ public final class NavaidFile {
         System.out.println("Trying to identify possible Navaid matches in NOTAMS");
     }
 
-    public boolean navaidExists(String vorId) {
+    public boolean navaidExists(String vorId, String freq) {
 
         for (Navaid ndcTemp : meinListe) {
             if (ndcTemp.getVorId().equals(vorId)) {
-                System.out.println(ndcTemp.getVorId());
-                return true;
+                
+                if(ndcTemp.getVorFreq().contains(freq)) {
+                    return true;
+                }
+                //System.out.println(ndcTemp.getVorId());
+                
             }
         }
-        System.out.println(vorId + " nicht gefunden");
+        //System.out.println(vorId + " nicht gefunden");
         return false;
 
     }
