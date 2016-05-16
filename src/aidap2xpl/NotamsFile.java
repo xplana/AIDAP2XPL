@@ -5,7 +5,6 @@
  */
 package aidap2xpl;
 
-import java.io.File;
 import java.io.IOException;
 import static java.sql.Types.NULL;
 import java.util.ArrayList;
@@ -26,10 +25,14 @@ import org.xml.sax.SAXException;
  */
 public class NotamsFile {
 
-    ArrayList<Notam> NotamsListe;
-    ArrayList<ActionItem> ActionListe;
+    // get all the stored path´s for the files
+    Settings set = new Settings();
 
-    File fXmlFile = new File(System.getProperty("user.home") + "/Desktop/notam_I.xml");
+    ArrayList<Notam> NotamsListe;
+    ActionItem output = new ActionItem();
+    ActionFile ActionFileForXPlane = new ActionFile();
+
+    // XML Kram
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder;
     Document doc;
@@ -39,15 +42,22 @@ public class NotamsFile {
 
         NotamsListe = new ArrayList<>();
 
+        
+        // Check XML integrity
+        
+        
         // Preparing XML Inport
-        this.dBuilder = dbFactory.newDocumentBuilder();
-        this.doc = dBuilder.parse(fXmlFile);
-        System.out.println("...\r\nProcessind NOTAMs import from: " + fXmlFile);
+        
+        //this.doc = dBuilder.parse(fXmlFile);
+        
+            this.dBuilder = dbFactory.newDocumentBuilder();
+            this.doc = dBuilder.parse(set.getNotamsXMLFile());
+        
+        System.out.println("...\r\nProcessind NOTAMs import from: " + set.getNotamsXMLFile());
         doc.getDocumentElement().normalize();
-
-        // System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
         NodeList nList = doc.getElementsByTagName("notam-rec");
         System.out.println("Total Notams found: " + nList.getLength());
+        // System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 
         // Create navaid objects
         for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -108,10 +118,13 @@ public class NotamsFile {
         System.out.println("Size to parse: " + NotamsListe.size());
     }
 
-    //Identify possible matchings
-    public Notam identifyPossibleNavaids(String QCode) {
+    //Identify possible Navaids
+    public Notam identifyPossibleNavaids(String QCode) throws IOException {
+
+        //Initialize the File we want to write the actionItems for X-Plane in
+        this.ActionFileForXPlane.initializeActionFile();
+
         Notam processingNotam = new Notam();
-        ActionItem output = new ActionItem();
 
         System.out.println("...\r\nTrying to find NOTAMS that contain Q-Code: " + QCode);
         System.out.println("Size to parse: " + NotamsListe.size());
@@ -120,7 +133,7 @@ public class NotamsFile {
 
             // Get all matchings based on the QCode
             if (nt2.getNotam_text().contains("/" + QCode)) {
-                System.out.println("\r\nORIGINAL:...................");
+                //System.out.println("\r\nORIGINAL:...................");
                 //System.out.println(nt2.getNotam_text());
 
                 // Check if line E) is availabile in NOTAM TEXT
@@ -164,7 +177,7 @@ public class NotamsFile {
                     // trying to identify the navaids frequency    
                     Pattern p = null;
 
-                    // VOR/DME    
+                    // Parse for Navaid type VOR/DME    
                     if (QCode.startsWith("QNM")) {
                         //determine type of Navaid
                         output.setItemType("VOR/DME");
@@ -177,8 +190,8 @@ public class NotamsFile {
                                 "[1]{1}[0-1]{1}[0-9]{1}[,]{1}\\d{0,2}");
 
                     }
-                    
-                    // VOR/DME    
+
+                    // Parse for Navaid type VOR
                     if (QCode.startsWith("QNV")) {
                         //determine type of Navaid
                         output.setItemType("VOR");
@@ -192,7 +205,7 @@ public class NotamsFile {
 
                     }
 
-                    // NDB  
+                    // Parse for Navaid type NDB  
                     if (QCode.startsWith("QNB")) {
                         //determine type of Navaid
                         output.setItemType("NDB");
@@ -213,12 +226,14 @@ public class NotamsFile {
 
                     while (m.find()) {
 
-                        //System.out.println("Navaid Frequency identified >> " + m.group() + " " + m.start() + " " + m.end());
+                        System.out.println("Navaid Frequency identified >> " + m.group() + " " + m.start() + " " + m.end());
                         output.setItemFreq(m.group().replace(",", "."));
                         break;
                     }
 
-                    // Step3. Check if the parsed navaid exists in XPL navaid database
+                    
+
+// Step3. Check if the parsed navaid exists in XPL navaid database
                     NavaidFile neu = new NavaidFile();
                     int i;
                     for (i = 0; i < cleanReportSplitted.length; i++) {
@@ -230,11 +245,6 @@ public class NotamsFile {
                                 //write the found and matching navaid to the output List
                                 output.setItemId(cleanReportSplitted[i]);
 
-                                //determine type of Navaid
-                                if (QCode.startsWith("QNM")) {
-
-                                }
-
                                 break;
                             } else {
                                 //System.out.println(cleanReportSplitted[i] + " not found in Database Navaids");
@@ -243,10 +253,9 @@ public class NotamsFile {
 
                     }
 
-                    //System.out.println(cleanReport);
                 }
 
-                // write all possible results into the actionList 
+                // write all other items into the actionList 
                 try {
                     //output.setItemId(nt2.getCns_location_id()); this needs to be changed
                     output.setItemRegion(nt2.getIcao_id());
@@ -255,33 +264,19 @@ public class NotamsFile {
                     output.setItemFrom("FROM");
                     output.setItemUntil("UNTIL");
 
-                    System.out.println(output.getItemId() + " "
-                            + output.getItemRegion() + " "
-                            + output.getItemFreq() + " "
-                            + output.getItemType() + " "
-                            + output.getItemLat() + " "
-                            + output.getItemLon() + " "
-                            + output.getItemFrom() + " "
-                            + output.getItemUntil());
-//                    
                 } catch (Exception e) {
                     System.out.println(e);
                 }
 
+                // Lets give the current ActionItem to the ActionFile
+                this.ActionFileForXPlane.addToActionFile(this.output);
             }
 
-            //Output all entries that might be of interest 
         }
 
-        //System.out.println("Total entries in actionList" + ActionListe.size());
-        System.out.println("End of processing" + output.getItemId());
+        System.out.println("End of processing");
 
         return processingNotam;
-    }
-
-    //Write a file whith everything that XPL has to execute (one day)
-    public void createActionFile() {
-
     }
 
 }

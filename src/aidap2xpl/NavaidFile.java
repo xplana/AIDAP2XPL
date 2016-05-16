@@ -17,15 +17,27 @@ import java.util.ArrayList;
 public final class NavaidFile {
 
     ArrayList<Navaid> meinListe;
+    
+    // get all the stored path´s for the files
+    Settings setting = new Settings();
+    
+    //prepare debugging
+    debug out = new debug();
 
-    // Read a config file where the path to X-planes Navaid File is stored
-    // Check if the Navaid File exists
-    // read Navaid File (this normally takes X-planes original Navaids File) into
-    // an array
+    // TODO Read a config file where the path to X-planes Navaid File is stored
+    
+    // TODO Check if the Navaid File exists
+    
+    // read Navaid File (this normally takes X-planes original Navaids File) into an array
     public NavaidFile() {
 
         this.meinListe = new ArrayList<>();
-        dateiEinlesen("/Users/wdr/Desktop/Navaids.txt");
+        try {
+             dateiEinlesen(setting.getXPL_Path());
+        } catch(Exception e) {
+            out.printToScreen("Problem reading file " + setting.getXPL_Path());
+        }
+       
     }
     
     public void dateiEinlesen(String file) {
