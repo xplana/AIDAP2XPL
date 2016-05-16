@@ -32,7 +32,7 @@ public class AIDAP2XPL {
         
         // Import Notams File    
         NotamsFile notams = new NotamsFile();
-        notams.identifyPossibleNavaids("QNMAS");
+        notams.identifyPossibleNavaids("QNM");
 
         //Parse Notams-File
     

@@ -71,14 +71,14 @@ public final class NavaidFile {
         System.out.println("Trying to identify possible Navaid matches in NOTAMS");
     }
 
-    public boolean navaidExists(String vorId, String freq) {
+    public boolean navaidExists(String vorId) {
 
         for (Navaid ndcTemp : meinListe) {
             if (ndcTemp.getVorId().equals(vorId)) {
                 
-                if(ndcTemp.getVorFreq().contains(freq)) {
+                
                     return true;
-                }
+                
                 //System.out.println(ndcTemp.getVorId());
                 
             }
