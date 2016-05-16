@@ -16,9 +16,14 @@ public class debug {
     
     public void printToScreen (String message) {
         
+
+          // TODO change priorities and exit this to a logfile
+          System.out.println(message);
+
         if (setting.getDebugOn()==true) {
             System.out.println("");
         }
+
     }
     
     

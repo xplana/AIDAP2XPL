@@ -12,8 +12,14 @@ package aidap2xpl;
 public class Settings {
     private String XPL_Path = "/Applications/X-Plane 10/Custom Data/GNS430/navdata/Navaids.TXT";
     private String NotamsXMLFile = "/Users/wdr/Desktop/notam_I.XML";
-    private Boolean debugOn = true;
+
+    private String ActionFileXPlane = "/Users/wdr/Desktop/output.TXT";
+    private Boolean debugOn = false;        //
+    private Integer debugLevel = 1;         //1=only important notes, 0=all
+
+    //private final Boolean debugOn = true;
     // Lili was here!
+
 
     
     
