@@ -14,6 +14,9 @@ public class Settings {
     private String NotamsXMLFile = "/Users/wdr/Desktop/notam_I.XML";
     private Boolean debugOn = true;
 
+    
+    
+    //TESTADFÖKSJDÖLFKJSÖDLKFJ
     /**
      * @return the XPL_Path
      */
