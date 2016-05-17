@@ -23,6 +23,11 @@ public class AIDAP2XPL {
      */
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
         
+        // TODO Do some checks like
+        // * does the navaid file exist
+        // * does the notams exist
+        // * does the settings-file exist
+
         // Import Navaids from X-Plane Navaids.txt file
         NavaidFile navaidContainer = new NavaidFile();
 
