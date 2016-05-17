@@ -1,0 +1,134 @@
+
+
+List of all possible Actions to be triggered in X-Plane
+
+Current discussion
+====================
+Landing Systems
+IC      Instrument landing system (both, loc and GS)?
+ID	DME associated with ILS
+IG	Glide path (ILS)
+II	Inner marker (ILS)
+IL	Localizer (ILS)
+IM	Middle marker (ILS)
+IN	Localizer
+IO	Outer marker (ILS)
+IS	ILS Category I      (check if really availabile)
+IT	ILS Category II     (check if really availabile)
+IU	ILS Category III    (check if really availabile)
+IW	Microwave landing system (MLS)
+IX	Locator outer (ILS)
+IY	Locator middle (ILS
+
+Lighting
+LP	Precision approach path indicator (PAPI)
+LV      Visual approach slope indicator system (VASI)
+
+Navigation Facilities
+NB	Nondirectional radio beacon (NDB)
+NC	DECCA (out of service)
+ND	Distance measuring equipment (DME)
+NF	Fan marker (out of service) 
+NL	Locator (Locator outer marker, OM + NDB, 1020Hz)
+NM	VOR/DME
+NN	TACAN (military)
+NO	OMEGA
+NT	VORTAC (VOR+TACAN ??? is this part of X-Plane?)
+NV	VOR
+NX	Direction-finding station (RDF, ??? is this part of X-Plane?)
+
+Volmet
+SV	VOLMET broadcast
+
+
+
+Feature List {Messages only}
+=============================
+FI      Aircraft De-icing
+FU      Fuel availability
+
+Warnings
+WA	Air display
+WB	Aerobatics
+WC	Captive balloon or kite
+WD	Demolition of explosives
+WE	Exercises
+WF	Air refueling
+WG	Glider flying
+WH	Blasting
+WJ	Banner/target towing
+WL	Ascent of free balloon
+WM	Missile, gun or rocket firing
+WP	Parachute jumping exercise, paragliding, or hang gliding
+WR	Radioactive materials or toxic chemicals
+WS	Burning or blowing gas
+WT	Mass movement of aircraft
+WU	Unmanned aircraft
+WV	Formation flight
+WW	Significant volcanic activity
+WY	Aerial survey
+WZ	Model flying
+
+
+Feature List
+=============================
+AGA Facilities and Services
+FA      Aerodrome Closure
+FL      Landing Direction indicator (http://encyclopedia2.thefreedictionary.com/landing+direction+indicator)
+FP      Heliport
+FW      Wind direction indicator
+
+Movement and Landing Areas
+MN	Apron
+
+
+Lighting facilities
+LA      Approach Lighting (https://de.wikipedia.org/wiki/Approach_Lighting_System)
+LB      Aerodrome Beacon
+LC	Runway centre line lights
+LE	Runway edge lights
+LH	High intensity runway lights
+LI	Runway end identifier lights
+LJ	Runway alignment indicator lights
+LK	Category II components of approach lighting system
+LL	Low intensity runway lights
+LM	Medium intensity runway lights
+LT	Threshold lights
+LX	Taxiway centre line lights
+LY	Taxiway edge lights
+LZ	Runway touchdown zone lights
+
+Movement and Landing Area
+MO      Stop Bar
+MP      Aircraft Stands
+MR      Runway
+MS      Stopway
+MT      Treshold
+MX      Taxiway
+
+Other information
+OB	Obstacle
+OL      Obstacle Lights on..
+
+ATM
+PA	Standard instrument arrival
+PB	Standard VFR arrival
+PD	Standard instrument departure
+PE	Standard VFR departure
+PI	Instrument approach procedure
+PK	VFR approach procedure
+PR	Radio failure procedure
+
+Airspace Restrictions
+RA	Airspace reservation
+RD	Danger area
+RM	Military operating area
+RO	Overflying of ...
+RP	Prohibited area
+RR	Restricted area
+RT	Temporary restricted area
+
+
+
+
+
