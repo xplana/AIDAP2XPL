@@ -22,6 +22,7 @@ public class Navaid {
     private String VorAltitude;
     private String VorCountryCode;
     private String VorSettingFour;
+   
 
 
     /**

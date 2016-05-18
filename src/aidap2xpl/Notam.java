@@ -24,7 +24,8 @@ public class Notam {
             notam_from,
             notam_until,
             notam_item_type,
-            notam_report;
+            notam_report,
+            notam_account_id;
 
     /**
      * @return the notam_id
@@ -206,6 +207,20 @@ public class Notam {
      */
     public void setNotam_item_type(String notam_item_type) {
         this.notam_item_type = notam_item_type;
+    }
+
+    /**
+     * @return the notam_account_id
+     */
+    public String getNotam_account_id() {
+        return notam_account_id;
+    }
+
+    /**
+     * @param notam_account_id the notam_account_id to set
+     */
+    public void setNotam_account_id(String notam_account_id) {
+        this.notam_account_id = notam_account_id;
     }
 
 }

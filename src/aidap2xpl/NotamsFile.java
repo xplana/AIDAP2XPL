@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
  */
 public class NotamsFile {
 
+    //prepare debugs
     debug out = new debug();
 
     // get all the stored path´s for the files
@@ -39,12 +40,14 @@ public class NotamsFile {
     DocumentBuilder dBuilder;
     Document doc;
 
-    //Import the NOTAMS file
+    //Import the NOTAMS from the Notams file
     public NotamsFile() throws IOException, SAXException, ParserConfigurationException {
 
         NotamsListe = new ArrayList<>();
 
         // TODO Check XML integrity
+        
+        
         // Preparing XML Inport
         this.dBuilder = dbFactory.newDocumentBuilder();
         this.doc = dBuilder.parse(set.getNotamsXMLFile());
@@ -59,65 +62,69 @@ public class NotamsFile {
         // Read XML-File
         for (int temp = 0; temp < nList.getLength(); temp++) {
 
-            Notam notam = new Notam();
+            Notam notamItem = new Notam();
 
             Node nNode = nList.item(temp);
             Element eElement = (Element) nNode;
 
             // Import NOTAM ID
             try {
-                notam.setNotam_id(eElement.getElementsByTagName("notam_id").item(0).getTextContent());
+                notamItem.setNotam_id(eElement.getElementsByTagName("notam_id").item(0).getTextContent());
             } catch (Exception e) {
                 out.printToScreen(temp + " Missing notam_id for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent(), 0);
             }
 
             // Import Location_ID from notam, normally this is the Airport ICAO Code 
-            notam.setCns_location_id(eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
+            notamItem.setCns_location_id(eElement.getElementsByTagName("cns_location_id").item(0).getTextContent());
 
            
-            // TODO Import the account ID, looks lik AAHHGS
-            
+            // Import Account ID (should look something like AAHHGS)
+             try {
+                notamItem.setNotam_account_id(eElement.getElementsByTagName("account_id").item(0).getTextContent());
+            } catch (Exception e) {
+                out.printToScreen(temp + " Missing account id " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent(), 0);
+            }
             
             // Import the ICAO ID, normally this is tha airports name
             try {
-                notam.setIcao_id(eElement.getElementsByTagName("icao_id").item(0).getTextContent());
+                notamItem.setIcao_id(eElement.getElementsByTagName("icao_id").item(0).getTextContent());
             } catch (Exception e) {
                 out.printToScreen(temp + " Missing ICAO Name " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent(), 0);
             }
 
             // Import ICAO Name from Notam
             try {
-                notam.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
+                notamItem.setIcao_name(eElement.getElementsByTagName("icao_name").item(0).getTextContent());
             } catch (Exception e) {
                 out.printToScreen(temp + " Missing ICAO name for " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent(), 0);
             }
 
             // Import the NOTAMS effective
             try {
-                notam.setNotam_effective_dtg(eElement.getElementsByTagName("notam_effective_dtg").item(0).getTextContent());
+                notamItem.setNotam_effective_dtg(eElement.getElementsByTagName("notam_effective_dtg").item(0).getTextContent());
             } catch (Exception e) {
                 out.printToScreen(temp + " Missing Notams effective date " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent(), 0);
             }
 
             // Import the NOTAMS last mod
             try {
-                notam.setNotam_lastmod_dtg(eElement.getElementsByTagName("notam_lastmod_dtg").item(0).getTextContent());
+                notamItem.setNotam_lastmod_dtg(eElement.getElementsByTagName("notam_lastmod_dtg").item(0).getTextContent());
             } catch (Exception e) {
                 out.printToScreen(temp + " Missing Notams Ladtmod " + eElement.getElementsByTagName("cns_location_id").item(0).getTextContent(), 0);
             }
 
             // Import the NOTAM Text
-            notam.setNotam_text(eElement.getElementsByTagName("notam_text").item(0).getTextContent());
+            notamItem.setNotam_text(eElement.getElementsByTagName("notam_text").item(0).getTextContent());
 
             //import the NOTAM Report
-            notam.setNotam_report(eElement.getElementsByTagName("notam_report").item(0).getTextContent());
+            notamItem.setNotam_report(eElement.getElementsByTagName("notam_report").item(0).getTextContent());
             
             // TODO import NOTAM_NRC -> looks like NOTAMR, NOTAMN..
             
            
 
             // Put all the stuff into the Container
-            this.NotamsListe.add(notam);
+            this.NotamsListe.add(notamItem);
 
         }
         System.out.println("Total Number of Notams found: " + NotamsListe.size());
@@ -234,7 +241,7 @@ public class NotamsFile {
                         break;
                     }
 
-// Step3. Check if the parsed navaid exists in XPL navaid database
+                    // Step3. Check if the parsed navaid exists in XPL navaid database
                     NavaidFile neu = new NavaidFile();
                     int i;
                     for (i = 0; i < cleanReportSplitted.length; i++) {
@@ -264,6 +271,7 @@ public class NotamsFile {
                     output.setItemLon("LON");
                     output.setItemFrom("FROM");
                     output.setItemUntil("UNTIL");
+                    
 
                 } catch (Exception e) {
                     System.out.println(e);
